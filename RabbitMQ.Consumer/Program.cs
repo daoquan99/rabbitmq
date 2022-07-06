@@ -6,7 +6,7 @@ using System.Text;
 
 namespace RabbitMQ.Consumer
 {
-    internal class Program
+    static class Program
     {
         static void Main(string[] args)
         {
