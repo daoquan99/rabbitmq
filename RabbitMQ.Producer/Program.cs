@@ -11,10 +11,11 @@ namespace RabbitMQ.Producer
     {
         static void Main(string[] args)
         {
-            var host = "localhost";
+            var host = "123.31.38.181";
             var port = 5672;
-            var userName = "manhquan";
-            var password = "manhquan";
+            var userName = "admin";
+            var password = "vgy7ujm";
+            var queueName = "ddth-lichhop";
             var factory = new ConnectionFactory
             {
                 HostName = host,
@@ -25,7 +26,8 @@ namespace RabbitMQ.Producer
 
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
-            channel.QueueDeclare("demo-queue", durable: true, exclusive: false, autoDelete: false, arguments: null);
+            channel.QueueDeclare(queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+            
             var index = 1;
             while (true)
             {
@@ -36,7 +38,9 @@ namespace RabbitMQ.Producer
                 var message = Console.ReadLine();
                 var obj = new { Name = name, Message = message };
                 var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(obj));
-                channel.BasicPublish("", "demo-queue", null, body);
+                var properties = channel.CreateBasicProperties();
+                properties.Persistent = true;
+                channel.BasicPublish("", queueName, null, body);
             }
         }
     }
